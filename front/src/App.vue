@@ -2,10 +2,9 @@
   <div class="layout" id="app">
     <header>
       <nav class="navbar shadow-1 tertiary">
-        <router-link to="/"><i class="mdi mdi-dots-horizontal font-s7 my-auto d-block"></i></router-link>
+        <router-link to="/"><i class="mdi mdi-dots-horizontal font-s6 my-auto d-block"></i></router-link>
         <div class="navbar-menu ml-auto">
-          <router-link class="navbar-link" to="/">1</router-link>
-          <router-link class="navbar-link" to="/login">2</router-link>
+          <router-link class="navbar-link" to="/login"><i class="mdi mdi-power font-s6 my-auto d-block"></i></router-link>
         </div>
       </nav>
     </header>
