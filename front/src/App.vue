@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="layout" id="app">
     <header>
       <nav class="navbar shadow-1 tertiary">
         <router-link to="/"><i class="mdi mdi-dots-horizontal font-s7 my-auto d-block"></i></router-link>
