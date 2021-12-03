@@ -14,7 +14,10 @@ export class Cart {
     }
 
     public getPrice() {
-        return this._products.reduce((acc, productCart) => acc += productCart.product.price, acc, 0)
+        return this._products.reduce((acc: number, productCart: ProductCart) => {
+            acc += productCart.product.price;
+            return acc
+        }, 0)
     }
 
     public clear() {
@@ -22,7 +25,7 @@ export class Cart {
     }
 
     public addProduct(product: Product) {
-
+        this._products.push(new ProductCart(product, 1))
     }
 }
 
