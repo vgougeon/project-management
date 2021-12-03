@@ -1,20 +1,5 @@
 import { OrderEntry, Product, PRODUCTS } from './data';
-
-enum StateName {
-  WaitForScan,
-  WaitQuantity,
-  WaitForPCode,
-  UpdateAmount,
-  FindProduct,
-  UnknownProduct,
-  ReturnProduct,
-  RemoveProductQuantity,
-  Pay,
-  PaymentMode,
-  PayOK,
-  PayError,
-  EnterReturnQuantity,
-}
+import { StateManager, StateName } from "./stateManager"
 
 class Data {
   private _currentProduct?: Product;
@@ -23,6 +8,7 @@ class Data {
   private _paid: number = 0;
   private _quantity: number = 1;
 
+  //#region "My Region"
   public get quantity(): number {
     return this._quantity;
   }
@@ -61,10 +47,11 @@ class Data {
   public set paid(value: number) {
     this._paid = value;
   }
+  //#endregion "My Region"
 }
 
 class FSM {
-  currentState: StateName = StateName.WaitForScan;
+  currentState: StateName = StateName.WaitForScan
   state: Data = new Data()
 
   constructor() {}
