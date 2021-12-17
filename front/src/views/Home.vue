@@ -7,30 +7,21 @@
             <table class="table">
               <thead class="tertiary">
                 <tr>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+                  <th>#</th>
+                  <th>Nom</th>
+                  <th>Quantité</th>
+                  <th>Prix</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>92837423</td>
-                  <td>Store double 4,50 x 203</td>
-                  <td>2</td>
-                  <td>1240,0</td>
+                <tr v-for="productCart in products" :key="productCart.product">
+                  <td>{{ productCart.product.code }}</td>
+                  <td>{{ productCart.product.name }}</td>
+                  <td>{{ productCart.quantity }}</td>
+                  <td>{{ productCart.product.price * productCart.quantity }}</td>
                   <td>
-                    <ax-btn size="small" circle class="d-block primary mx-auto"><i class="mdi font-s3 mdi-close"></i></ax-btn>
-                  </td>
-                </tr>
-                <tr>
-                  <td>92837424</td>
-                  <td>Store double 4,50 x 203</td>
-                  <td>2</td>
-                  <td>1240,0</td>
-                  <td>
-                    <ax-btn size="small" circle class="d-block primary mx-auto"><i class="mdi font-s3 mdi-close"></i></ax-btn>
+                    <ax-btn @click="remove(productCart)" size="small" circle class="d-block primary mx-auto"><i class="mdi font-s3 mdi-close"></i></ax-btn>
                   </td>
                 </tr>
               </tbody>
@@ -52,7 +43,10 @@
                 <ax-form-field class="white shadow-1">
                   <ax-form-control v-model="pin" :value="pin" class="bd-0" placeholder="Code art" tag="input" type="text"></ax-form-control>
                 </ax-form-field>
-                <ax-btn class="primary rounded-1 d-block" small><i class="mdi mdi-check pr-2"></i></ax-btn>
+                <ax-btn @click="scan" class="primary rounded-1 d-block" small><i class="mdi mdi-check pr-2"></i></ax-btn>
+              </div>
+              <div class="d-flex fx-center">
+                <img :src="state.currentProduct?.image" style="max-height: 150px;" class="responsive-media" alt="">
               </div>
               <ax-btn class="primary mt-auto d-block rounded-1 light-shadow-1 w100 mb-1 ">Produit inconnu</ax-btn>
             </div>
@@ -78,19 +72,61 @@
 </template>
 
 <script lang="ts">
+import { Logic } from '../../Coordi/src/logic';
 
 export default {
   name: 'Home',
   data() {
     return {
       pin: '',
-      total: '26.50€'
+      api: null,
+      state: {},
+      currentState: '',
+      products: []
+    }
+  },
+  computed: {
+    total() {
+      return Array.from(this.products).reduce((acc, item: any) => {
+        return +acc + (item.product.price * item.quantity); 
+      }, 0)
+    },
+    computedState() {
+      return this.state;
+    },
+    computedCurrentState() {
+      return this.currentState;
     }
   },
   methods: {
+    scan() {
+      console.log(this.state.cart.products);
+      if (this.currentState === "WAIT_FOR_SCAN") {
+        this.api.scan(+this.pin);
+      } else if (this.currentState === "WAIT_QUANTITY") {
+        this.api.quantity(+this.pin)
+      }
+      this.pin = '';
+    },
+    updateState(state) {
+      this.state = state
+    },
     addNumber(num: string): void {
       this.pin += num;
+    },
+    remove(productCard) {
+      console.log("________________________________")
+      this.api.pressReturn();
+      this.api.scan(productCard.product.code);
+      this.api.quantity(productCard.quantity);
     }
-  }
+  },
+  mounted() {
+    this.api = new Logic((state, currentState) => {
+      this.updateState(state);
+      this.currentState = currentState;
+      this.products = this.state.cart.products
+    });
+  },
 };
 </script>
